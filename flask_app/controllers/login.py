@@ -54,7 +54,9 @@ def logout():
 
 @app.route('/dashboard')
 def dashboard():
-    return render_template('dashboard.html')
+    recipes = Recipe.get_all_recipes()
+    print(recipes)
+    return render_template('dashboard.html', recipes = recipes)
 
 @app.route('/recipes/new')
 def add_recipe():

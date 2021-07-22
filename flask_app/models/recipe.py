@@ -1,5 +1,7 @@
 from flask import flash
 from flask_app import app
+from flask_app.models.user import User
+
 
 from flask_app.config.mysqlconnection import connectToMySQL
 
@@ -39,3 +41,28 @@ class Recipe():
             is_valid = False
 
         return is_valid
+
+    @classmethod
+    def get_all_recipes(cls):
+
+        query = 'SELECT * FROM recipes JOIN users ON recipes.users_id = users.id;'
+
+        results = connectToMySQL('recipes_schema').query_db(query)
+
+        recipes = []
+
+        for item in results:
+            recipe = cls(item)
+            user_data = {
+                'id': item['users.id'],
+                'first_name': item['first_name'],
+                'last_name': item['last_name'],
+                'email': item['email'],
+                'password': item['password'],
+                'created_at': item['users.created_at'],
+                'updated_at': item['users.updated_at']
+            }
+            recipe.user = User(user_data)
+            recipes.append(recipe)
+
+        return recipes
