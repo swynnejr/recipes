@@ -74,5 +74,5 @@ def create_recipe():
         Recipe.create_recipe(data)
         print('recipe valid')
         return redirect('/dashboard')
-    print('show invalid')
+    print('recipe invalid')
     return redirect('/recipes/new')
