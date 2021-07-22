@@ -66,3 +66,24 @@ class Recipe():
             recipes.append(recipe)
 
         return recipes
+
+    @classmethod
+    def get_recipe_by_id(cls, data):
+        query = "SELECT * FROM recipes JOIN users ON recipes.users_id = users.id WHERE recipes.id = %(id)s;"
+
+        result = connectToMySQL('recipes_schema').query_db(query, data)
+
+        recipe = cls(result[0])
+        user_data = {
+            'id': result[0]['users.id'],
+            'first_name': result[0]['first_name'],
+            'last_name': result[0]['last_name'],
+            'email': result[0]['email'],
+            'password': result[0]['password'],
+            'created_at': result[0]['users.created_at'],
+            'updated_at': result[0]['users.updated_at']
+        }
+        recipe.user = User(user_data)
+
+        return recipe
+

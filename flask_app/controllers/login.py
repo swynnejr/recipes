@@ -78,3 +78,10 @@ def create_recipe():
         return redirect('/dashboard')
     print('recipe invalid')
     return redirect('/recipes/new')
+
+@app.route('/recipes/<int:recipe_id>')
+def show_info(recipe_id):
+
+    recipe = Recipe.get_recipe_by_id({'id': recipe_id})
+
+    return render_template('recipe_info.html', recipe = recipe)
