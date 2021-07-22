@@ -1,7 +1,7 @@
 from flask_app.models.user import User
+from flask_app.models.recipe import Recipe
 from flask_app import app
 from flask import render_template, redirect, session, request, flash
-from flask_app.models.user import User
 
 from flask_bcrypt import Bcrypt
 
@@ -13,10 +13,6 @@ def index():
 
 @app.route('/users/register', methods =['POST'])
 def register_user():
-# FUNCTIONALITY CHECK: You can call the hash out here and then print it, OR you call it with the dat input below.
-    # pw_hash = bcrypt.generate_password_hash(request.form['password'])
-    # print(pw_hash)
-# validate form data
     if (User.validate_registration(request.form)):
         data = {
             "first_name": request.form['first_name'],
@@ -24,13 +20,7 @@ def register_user():
             "email": request.form['email'],
             "password": bcrypt.generate_password_hash(request.form['password'])
         }
-# IF you want "registration success page ADD user.id = User.create_user(data) below  VVVVVVV
         User.create_user(data)
-# IF you want a "registration success" landing page VVVV
-        # session['user_id'] = user.id
-        # return redirect('/success')
-
-# create user IF data is valid
     return redirect('/')
 
 @app.route('/users/login', methods = ['POST'])
@@ -52,19 +42,9 @@ def login_user():
     session['user_id'] = user.id
     session['email'] = user.email
     session['first_name'] = user.first_name
-    # session['username'] = user.username
 
     return redirect('/dashboard')
 
-# WE WILL WANT TO CHANGE ^^^redirect('/')^^^ and VVV @app.route VVV
-
-# @app.route('/success')
-# def success():
-#     if 'user_id' not in session:
-#         flash("Please log in to view this page.")
-#         return redirect('/')
-
-#     return render_template('success.html')
 
 @app.route('/logout')
 def logout():
@@ -80,5 +60,19 @@ def dashboard():
 def add_recipe():
     return render_template('new_recipe.html')
 
-@app.route('/recipes/create')
-def 
+@app.route('/recipes/create', methods=['POST'])
+def create_recipe():
+
+    if Recipe.validate_recipe(request.form):
+        data = {
+            'name': request.form['name'],
+            'description': request.form['description'],
+            'instructions': request.form['instructions'],
+            'under_30': request.form['under_30'],
+            'users_id': session['user_id']
+        }
+        Recipe.create_recipe(data)
+        print('recipe valid')
+        return redirect('/dashboard')
+    print('show invalid')
+    return redirect('/recipes/new')
