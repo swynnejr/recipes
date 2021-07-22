@@ -7,7 +7,7 @@
     <title>Recipes</title>
 </head>
 <body>
-    <h1>Welcome</h1>
+    <h1>Welcome {{session['first_name']}}</h1>
     <h2>{{recipe.name}}</h2>
     <ul style="border: 3px solid black;">
         <li>Description: {{recipe.description}}</li>
@@ -15,5 +15,7 @@
         <li>Instructions: {{recipe.instructions}}</li>
         <li>Date made: {{recipe.created_at}}</li>
     </ul>
+    <a href="/dashboard">Dashboard</a><br>
+    <a href="/logout">Log me out</a>
 </body>
 </html>

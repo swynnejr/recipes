@@ -85,3 +85,53 @@ def show_info(recipe_id):
     recipe = Recipe.get_recipe_by_id({'id': recipe_id})
 
     return render_template('recipe_info.html', recipe = recipe)
+
+@app.route('/recipes/<int:recipe_id>/edit')
+def edit_recipe(recipe_id):
+
+    recipe = Recipe.get_recipe_by_id({'id': recipe_id})
+
+    if session['user_id'] != recipe.users_id:
+        return redirect(f'/recipes/{recipe_id}')
+
+    return render_template('edit_recipe.html', recipe = recipe)
+
+
+@app.route('/recipes/<int:recipe_id>/update', methods=['POST'])
+def update_recipe(recipe_id):
+
+    if Recipe.validate_recipe(request.form):
+        data = {
+            'name': request.form['name'],
+            'description': request.form['description'],
+            'instructions': request.form['instructions'],
+            'under_30': request.form['under_30'],
+            'id': recipe_id
+            # 'users_id': session['user_id']
+        }
+        Recipe.update_recipe(data)
+        return redirect(f'/recipes/{recipe_id}')
+
+    return redirect(f'/recipes/{recipe_id}/edit')
+
+@app.route('/recipes/<int:recipe_id>/delete')
+def delete_recipe(recipe_id):
+    data = {
+        'id': recipe_id
+    }
+    recipe = Recipe.get_recipe_by_id({'id': recipe_id})
+
+
+    if session['user_id'] != recipe.users_id:
+        return redirect(f'/recipes/{recipe_id}')
+
+
+    Recipe.delete_recipe(data)
+    return redirect('/dashboard')
+
+    # recipe = Recipe.get_recipe_by_id({'id': recipe_id})
+
+    # if session['user_id'] != show.users_id:
+    #     return redirect(f'/shows/{show_id}')
+
+    return render_template('delete_recipe.html', recipe = recipe)

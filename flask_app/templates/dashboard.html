@@ -7,7 +7,7 @@
     <title>Recipes: Welcome</title>
 </head>
 <body>
-    <h1>Welcome!</h1>
+    <h1>Welcome {{session['first_name']}}!</h1>
     <p>These are recipes</p>
     <a href="/recipes/new">Create New Recipe</a>
     <table>
@@ -20,9 +20,10 @@
         <tr>
             <td>{{recipe.name}}</td>
             <td>{{recipe.under_30}}</td>
-            <td><a href="/recipes/{{recipe.id}}">View</a></td>
+            <td><a href="/recipes/{{recipe.id}}">View</a> | <a href="/recipes/{{recipe.id}}/edit">Edit</a> | <a href="/recipes/{{recipe.id}}/delete">Delete</a></td>
         </tr>
         {% endfor %}
     </table>
+    <a href="/logout">Log me out</a>
 </body>
 </html>

@@ -36,10 +36,12 @@ class Recipe():
             flash("Recipe name should be 1 to 100 characters.")
             is_valid = False
 
-        if len(data['description']) < 1 or len(data['description']) > 500:
-            flash("Recipe description should be 1 to 500 characters.")
+        if len(data['description']) < 3 or len(data['description']) > 500:
+            flash("Recipe description should be 3 to 500 characters.")
             is_valid = False
-
+        if len(data['instructions']) < 3 or len(data['instructions']) > 500:
+            flash("Recipe instructions should be 3 to 500 characters.")
+            is_valid = False
         return is_valid
 
     @classmethod
@@ -87,3 +89,16 @@ class Recipe():
 
         return recipe
 
+    @classmethod
+    def update_recipe(cls, data):
+
+        query = 'UPDATE recipes SET name = %(name)s, description = %(description)s, instructions = %(instructions)s, under_30 = %(under_30)s WHERE id = %(id)s;'
+
+        connectToMySQL('recipes_schema').query_db(query, data)
+
+    @classmethod
+    def delete_recipe(cls, data):
+
+        query = "DELETE FROM recipes WHERE id = %(id)s;"
+
+        connectToMySQL('recipes_schema').query_db(query, data)
